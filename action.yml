@@ -1,0 +1,6 @@
+name: AWS CLI for GitHub Actions
+description: AWS CLI for GitHub Actions
+author: Yunseok
+runs:
+  using: docker
+  image: Dockerfile
