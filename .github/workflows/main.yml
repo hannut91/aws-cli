@@ -24,7 +24,13 @@ jobs:
           git config --local user.name "Yunseok"
           git add Dockerfile
           git commit -m "Version update"
-          git tag -a -m "v2.0.0 update" v2.0.0
+          git tag -a -m "Tag update" v2.0.1
+      - name: Rename 
+        run: sed -i.bak s/1.18.42/AWS_CLI_VERSION/ Dockerfile
+      - name: Commit and Push
+        run: |
+          git add Dockerfile
+          git commit -m "Version update"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
