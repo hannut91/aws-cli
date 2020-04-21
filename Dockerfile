@@ -1,8 +1,6 @@
 FROM python:3.8.2-alpine3.11
 
-ARG AWS_CLI_VERSION
-
-RUN pip install --user awscli==$AWS_CLI_VERSION
+RUN pip3 install --no-cache-dir awscli==AWS_CLI_VERSION
 
 RUN apk add --no-cache jq groff less
 

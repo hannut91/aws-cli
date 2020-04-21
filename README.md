@@ -1,1 +1,1 @@
-# AWS CLI for GitHub Actions
+# AWS CLI Actions

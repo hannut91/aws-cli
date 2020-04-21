@@ -1,4 +1,4 @@
-name: AWS CLI for GitHub Actions
+name: AWS CLI Actions
 description: AWS CLI for GitHub Actions
 author: Yunseok
 runs:
