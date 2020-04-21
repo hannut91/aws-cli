@@ -23,7 +23,8 @@ jobs:
           git config --local user.email "hannut91@gmail.com"
           git config --local user.name "Yunseok"
           git add Dockerfile
-          git tag -a -m "My first action release" v1.3.5
+          git commit -m "Version update"
+          git tag -a -m "v2.0.0 update" v2.0.0
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
