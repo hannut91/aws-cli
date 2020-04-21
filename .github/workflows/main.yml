@@ -12,27 +12,26 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Rename
-        run: sed -i.bak s/AWS_CLI_VERSION/1.18.42/ Dockerfile
-      - name: Print version
-        uses: ./
-        with:
-          args: --version
-      - name: Commit and Push
+      - name: Extract tags done
+        run: git tag > tag-done
+      - name: Extract releases exisiting
+        run: curl https://pypi.org/pypi/awscli/json | jq -r '.releases | keys[]' > aws-tags
+      - name: Get first unreleased tag
+        run: grep -m 1 -Fxvf tag-done aws-tags | tr -d '\n' > latest
+      - name: Commit latest
         run: |
           git config --local user.email "hannut91@gmail.com"
           git config --local user.name "Yunseok"
-          git add Dockerfile
-          git commit -m "Version update"
-          git tag -a -m "Tag update" v2.0.1
-      - name: Rename 
-        run: sed -i.bak s/1.18.42/AWS_CLI_VERSION/ Dockerfile
-      - name: Commit and Push
-        run: |
-          git add Dockerfile
-          git commit -m "Version update"
+          git add latest
+          git commit -m "update latest tag"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
+      - name: Tag
+        uses: jaliborc/action-general-autotag@1.0.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source_file: latest
+          extraction_regex: "(\\d+\\.\\d+\\.\\d+)"
+          tag_message: "Automatic tag following AWS available release"
