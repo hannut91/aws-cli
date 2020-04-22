@@ -1,6 +1,9 @@
-name: AWS CLI Actions
+name: awscli
 description: AWS CLI for GitHub Actions
 author: Yunseok
 runs:
   using: docker
   image: Dockerfile
+branding:
+  icon: cloud
+  color: yellow
