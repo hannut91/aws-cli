@@ -1,0 +1,36 @@
+name: Check latest awscli version every hours
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: Version Check
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set AWS_CLI_VERSION
+        run: echo ::set-env name=AWS_CLI_VERSION::$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')
+      - name: Set CURRENT_VERSION
+        run: echo ::set-env name=CURRENT_VERSION::$(cat Dockerfile | grep awscli | cut -d "=" -f 3)
+      - name: if version updated
+        if: env.AWS_CLI_VERSION != env.CURRENT_VERSION
+        run: |
+          sed -i.bak s/$CURRENT_VERSION/$AWS_CLI_VERSION/ Dockerfile
+          git config --local user.email "hannut91@gmail.com"
+          git config --local user.name "Yunseok"
+          git add Dockerfile
+          git commit -m "Version update to $AWS_CLI_VERSION"
+          git tag -a -m "awscli $AWS_CLI_VERSION" $AWS_CLI_VERSION
+      - name: Push changes
+        if: env.AWS_CLI_VERSION != env.CURRENT_VERSION
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tags: true
+
