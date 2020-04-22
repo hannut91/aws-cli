@@ -35,6 +35,7 @@ jobs:
           tags: true
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: env.AWS_CLI_VERSION != env.CURRENT_VERSION
         with:
           name: Version update to ${{ env.AWS_CLI_VERSION }}
           body: awscli version is updated to ${{ env.AWS_CLI_VERSION }}
