@@ -1,0 +1,25 @@
+name: Test
+
+on: [push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: Version Check
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set AWS_CLI_VERSION
+        run: echo ::set-env name=AWS_CLI_VERSION::$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Version update to ${{ env.AWS_CLI_VERSION }}
+          body: awscli version is updated to ${{ env.AWS_CLI_VERSION }}
+          tag_name: ${{ env.AWS_CLI_VERSION }}
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
