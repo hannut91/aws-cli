@@ -12,27 +12,28 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Rename
-        run: sed -i.bak s/AWS_CLI_VERSION/1.18.42/ Dockerfile
-      - name: Print version
-        uses: ./
-        with:
-          args: --version
-      - name: Commit and Push
+      - name: Set AWS_CLI_VERSION
+        run: echo ::set-env name=AWS_CLI_VERSION::$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')
+      - name: Set CURRENT_VERSION
+        run: echo ::set-env name=CURRENT_VERSION::$(cat Dockerfile | grep awscli | cut -d "=" -f 3)
+      - name: if version updated
+        if: env.AWS_CLI_VERSION == env.CURRENT_VERSION
+        run: exit 0
+      # - name: if version updated
+      #   if: env.AWS_CLI_VERSION != env.CURRENT_VERSION
+      #   run: |
+      #     sed -i.bak s/$CURRENT_VERSION/$AWS_CLI_VERSION/ Dockerfile
+      #     git config --local user.email "hannut91@gmail.com"
+      #     git config --local user.name "Yunseok"
+      #     git add Dockerfile
+      #     git commit -m "Version update to $AWS_CLI_VERSION"
+      #     git tag -a -m "awscli $AWS_CLI_VERSION" $AWS_CLI_VERSION
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     tags: true
+      - name: Echo variable
         run: |
-          git config --local user.email "hannut91@gmail.com"
-          git config --local user.name "Yunseok"
-          git add Dockerfile
-          git commit -m "Version update"
-          git tag -a -m "Tag update" v2.0.1
-      - name: Rename 
-        run: sed -i.bak s/1.18.42/AWS_CLI_VERSION/ Dockerfile
-      - name: Commit and Push
-        run: |
-          git add Dockerfile
-          git commit -m "Version update"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
+          echo $AWS_CLI_VERSION
+          echo $CURRENT_VERSION
