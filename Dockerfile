@@ -4,8 +4,6 @@ RUN pip3 install --no-cache-dir awscli==1.18.58
 
 RUN apk add --no-cache jq groff less
 
-ENV PATH="/root/.local/bin:$PATH"
-
 WORKDIR /aws
 
 ENTRYPOINT [ "aws" ]
