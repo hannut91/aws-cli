@@ -6,7 +6,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Version Check
     steps:
       - name: Checkout
@@ -15,9 +15,9 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: Set AWS_CLI_VERSION
-        run: echo ::set-env name=AWS_CLI_VERSION::$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')
+        run: echo "AWS_CLI_VERSION=$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')" >> "$GITHUB_ENV"
       - name: Set CURRENT_VERSION
-        run: echo ::set-env name=CURRENT_VERSION::$(cat Dockerfile | grep awscli | cut -d "=" -f 3)
+        run: echo "CURRENT_VERSION=$(cat Dockerfile | grep awscli | cut -d "=" -f 3)" >> "$GITHUB_ENV"
       - name: if version updated
         if: env.AWS_CLI_VERSION != env.CURRENT_VERSION
         run: |
