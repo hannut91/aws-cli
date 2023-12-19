@@ -20,8 +20,8 @@ jobs:
       - name: Set CURRENT_VERSION
         run: echo "{CURRENT_VERSION}={$(cat Dockerfile | grep awscli | cut -d "=" -f 3)}" >> "$GITHUB_ENV"
       - run: |
-          echo "AWS_CLI_VERSION=$AWS_CLI_VERSION"
-          echo "CURRENT_VERSION=$CURRENT_VERSION"
+          echo "AWS_CLI_VERSION=${{ env.AWS_CLI_VERSION }}"
+          echo "CURRENT_VERSION=${{ env.CURRENT_VERSION }}"
       - name: if version updated
         if: env.AWS_CLI_VERSION != env.CURRENT_VERSION
         run: |
