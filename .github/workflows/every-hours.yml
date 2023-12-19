@@ -16,9 +16,9 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: Set AWS_CLI_VERSION
-        run: echo "{AWS_CLI_VERSION}={$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')}" >> "$GITHUB_ENV"
+        run: echo "AWS_CLI_VERSION=$(curl https://pypi.org/pypi/awscli/json | jq -r '.info.version')" >> "$GITHUB_ENV"
       - name: Set CURRENT_VERSION
-        run: echo "{CURRENT_VERSION}={$(cat Dockerfile | grep awscli | cut -d "=" -f 3)}" >> "$GITHUB_ENV"
+        run: echo "CURRENT_VERSION=$(cat Dockerfile | grep awscli | cut -d "=" -f 3)" >> "$GITHUB_ENV"
       - run: |
           echo "AWS_CLI_VERSION=${{ env.AWS_CLI_VERSION }}"
           echo "CURRENT_VERSION=${{ env.CURRENT_VERSION }}"
