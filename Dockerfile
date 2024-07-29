@@ -1,6 +1,6 @@
 FROM python:3.8.2-alpine3.11
 
-RUN pip3 install --no-cache-dir awscli==1.33.31
+RUN pip3 install --no-cache-dir awscli==1.33.32
 
 RUN apk add --no-cache jq groff less
 
